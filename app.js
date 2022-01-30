@@ -4,7 +4,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const resetButton = document.getElementById("reset");
     const annoucer = document.querySelector(".display-annoucer")
 
-    let gameBoard = ['','','','','','','','',''];
+    let board = ['','','','','','','','',''];
     let currentPlayer = "X";
     let isGameActive = true;
 
@@ -19,7 +19,7 @@ window.addEventListener("DOMContentLoaded", () => {
         [6][7][8]
     */
 
-    const winningPositions = [
+    const winningConditions = [
         [0,1,2],
         [3,4,5],
         [6,7,8],
@@ -29,6 +29,48 @@ window.addEventListener("DOMContentLoaded", () => {
         [0,4,8],
         [2,4,6]
     ];
+
+    function handleValidation(){
+        let roundWon = false;
+        for (let i = 0; i<= 7; i++){
+            const winCondition = winningConditions[i];
+            const a = board[winCondition[0]];
+            const b = board[winCondition[1]];
+            const c = board[winCondition[2]];
+            if(a === '' || b === '' || c === '') {
+                continue;
+            }
+
+            if (a === b && b === c){
+                roundWon = true
+                break;
+            }   
+        }
+
+        if (roundWon){
+            announce(currentPlayer === "X" ? playerXWins : playerOWins);
+            isGameActive = false;
+            return;
+        }
+
+        if (!board.includes(""))
+            announce(tie);
+    }
+
+    const announce = (type) => {
+        switch(type){
+            case playerOWins:
+                annoucer.innerHTML = "Player O Won!";
+                break;
+            case playerXWins:
+                annoucer.innerHTML = "Player X Wins";
+                break;
+            case tie:
+                annoucer.innerHTML = "TIE!";
+                break;
+        }
+        annoucer.classList.remove("hide");
+    }
 
     const changePlayer = () => {
         spanPlayerDisplay.classList.remove(`player${currentPlayer}`);
